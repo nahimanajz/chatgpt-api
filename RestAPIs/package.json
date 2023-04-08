@@ -1,0 +1,27 @@
+{
+    "name": "ChatGPTAPI",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon --exec babel-node server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "@google-cloud/speech": "^5.4.0",
+        "dotenv": "^16.0.3",
+        "esm": "^3.2.25",
+        "express": "^4.18.2",
+        "nodemon": "^2.0.21",
+        "openai": "^3.2.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.21.3",
+        "@babel/node": "^7.20.7",
+        "@babel/preset-env": "^7.20.2"
+    }
+}

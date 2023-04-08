@@ -1,0 +1,40 @@
+// const speech = require('@google-cloud/speech');
+// const { OpenAI } = require('openai');
+
+import speech from '@google-cloud/speech'
+import {OpenAI} from 'openai';
+
+// Set up speech recognition library
+const speechClient = new speech.SpeechClient();
+
+// Set up OpenAI API client
+const openai = new OpenAI('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');
+
+// Record audio and transcribe it
+const audio = {
+    content: './audio/EnglishinaMinute_PartyAnimal.mp3'
+    // Base64-encoded audio file or a stream,
+}
+const request = {
+    audio: audio,
+    config: {
+        encoding: 'LINEAR16',
+        sampleRateHertz: 16000,
+        languageCode: 'en-US',
+    },
+};
+const [response] = await speechClient.recognize(request);
+const transcript = response.results
+    .map(result => result.alternatives[0].transcript)
+    .join('\n');
+
+// Refine the transcript with GPT
+const respo = await openai.complete({
+    engine: 'text-davinci-002',
+    prompt: `Transcribe the following audio:\n"${transcript}"\n\nRefine the transcript:`,
+    maxTokens: 1024,
+});
+const refinedTranscript = respo.choices[0].text;
+
+console.log(`Original transcript: ${transcript}`);
+console.log(`Refined transcript: ${refinedTranscript}`);
