@@ -38,27 +38,6 @@ app.get("/transcribe", async (req, res) => {
 })
 app.post("/summarize", async (req, res) => {
   const openaiObj = new OpenAI(process.env.OPEN_SECOND_KEY)
-  /*
-  try {
-    const { prompt } = req.body
-    const options = {
-      model: 'text-davinci-002',
-      prompt,
-      temperature: 0.5,
-      maxTokens: 50,
-      n: 1,
-      stop: ['\n']
-
-    }
-    const { choices } = await openaiObj.complete(options)
-    const [{ text }] = choices;
-    return res.status(200).json({ summary: text.trim() })
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ message: error })
-
-  }
-  */
   const { data } = await openaiObj.complete({
     engine: 'davinci',
     prompt: req.body.prompt,
