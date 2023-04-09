@@ -1,6 +1,10 @@
 import express from 'express';
 import env from "dotenv";
 import { Configuration, OpenAIApi } from 'openai';
+import fs from 'fs'
+import path from 'path'
+import FormaData from 'form-data'
+import axios from 'axios'
 
 env.config();
 
@@ -11,7 +15,26 @@ const configuration = new Configuration({
   apiKey: `Bearer ${process.env.OPENAIA_API_KEY}`,
 });
 const openai = new OpenAIApi(configuration);
+app.get("/transcribe", async(req, res)=> {
 
+  const __filename = new URL(import.meta.url).pathname;
+  const __dirname =path.dirname(__filename)
+  const filePath = path.join(__dirname, './audio/EnglishinaMinute_PartyAnimal.mp3')
+  const model = "whisper-1";
+
+  const formRecords = new FormaData()
+  formRecords.append("model", model)
+  formRecords.append("file", fs.createReadStream(filePath))
+
+  return  await axios.post("https://api.openai.com/v1/audio/transcriptions", formRecords, {
+    headers: {
+      Authorization:`Bearer ${process.env.OPEN_SECOND_KEY}`,
+      'Content-Type':"multipart/form-data;boundary=${formRecords._boundary}"
+    }
+  })
+  .then(resp=> res.send({status: 200, transcribe: resp.data}))
+  .catch(error=> res.status(500).send({status: 500, message: error.message}))
+})
 
 app.get('/test',(req, res)=>{
   return res.status(200).json({message: "it works"})
